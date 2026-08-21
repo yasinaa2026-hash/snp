@@ -23,7 +23,7 @@ let active = 'All';
 
 $('#projectCount').textContent = repositories.length;
 
-function esc(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+function esc(value){return String(value).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c]));}
 
 categories.forEach(category => {
   const b = document.createElement('button');
@@ -44,8 +44,8 @@ function render(){
       <div class="tags">${r.tech.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
       <div class="project-actions">
         <button class="link-btn details" data-name="${esc(r.name)}">Details</button>
-        <a class="small-btn" href="https://github.com/yasinaa2026-hash/${encodeURIComponent(r.name)}" target="_blank" rel="noreferrer" aria-label="Open ${esc(r.name)} on GitHub">GitHub ↗</a>
-        ${r.live ? `<a class="small-btn" href="${r.live}" target="_blank" rel="noreferrer">Live ↗</a>` : ''}
+        <a class="small-btn" href="https://github.com/yasinaa2026-hash/${encodeURIComponent(r.name)}" target="_blank" rel="noreferrer" aria-label="Open ${esc(r.name)} repository on GitHub">Repository ↗</a>
+        ${r.live ? `<a class="small-btn live-btn" href="${r.live}" target="_blank" rel="noreferrer" aria-label="Open ${esc(r.name)} live application">Open app ↗</a>` : `<span class="demo-unavailable" title="No live demo URL configured yet">App not live</span>`}
       </div>
     </article>`).join('');
   document.querySelectorAll('.details').forEach(btn => btn.onclick = () => openDetails(btn.dataset.name));
@@ -57,7 +57,7 @@ const dialog = $('#projectDialog');
 const dialogContent = $('#dialogContent');
 function openDetails(name){
   const r = repositories.find(x=>x.name === name); if(!r) return;
-  dialogContent.innerHTML = `<div class="kicker">GITHUB PROJECT</div><div class="dialog-title">${esc(r.name)}</div><p class="dialog-copy">${esc(r.desc)}</p><p class="dialog-copy"><strong>Category:</strong> ${esc(r.category)}<br><strong>Technologies:</strong> ${esc(r.tech.join(' · '))}</p><div class="contact-actions"><a class="btn primary" href="https://github.com/yasinaa2026-hash/${encodeURIComponent(r.name)}" target="_blank" rel="noreferrer">Open repository ↗</a>${r.live?`<a class="btn ghost" href="${r.live}" target="_blank" rel="noreferrer">Open live demo ↗</a>`:''}</div>`;
+  dialogContent.innerHTML = `<div class="kicker">PROJECT</div><div class="dialog-title">${esc(r.name)}</div><p class="dialog-copy">${esc(r.desc)}</p><p class="dialog-copy"><strong>Category:</strong> ${esc(r.category)}<br><strong>Technologies:</strong> ${esc(r.tech.join(' · '))}</p><div class="contact-actions"><a class="btn primary" href="https://github.com/yasinaa2026-hash/${encodeURIComponent(r.name)}" target="_blank" rel="noreferrer">Open repository ↗</a>${r.live?`<a class="btn ghost" href="${r.live}" target="_blank" rel="noreferrer">Open live app ↗</a>`:`<span class="btn ghost disabled-btn" aria-disabled="true">Live app not configured</span>`}</div>`;
   dialog.showModal();
 }
 $('#dialogClose').onclick = () => dialog.close();
@@ -87,6 +87,5 @@ paletteBtn.onclick = () => {
 const typingBtn = $('#typingBtn');
 typingBtn.onclick = () => { typingBtn.textContent='Ready ↓'; typingBtn.onclick=()=>{ alert('Typing playground: build speed, accuracy and keyboard skills.'); }; };
 
-// Reveal cards progressively without requiring a library.
 const observer = new IntersectionObserver(entries => entries.forEach(e=>{ if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';observer.unobserve(e.target);}}),{threshold:.08});
 new MutationObserver(()=>document.querySelectorAll('.project-card').forEach(card=>{ if(!card.dataset.revealed){card.dataset.revealed='1';card.style.opacity='0';card.style.transform='translateY(12px)';card.style.transition='opacity .45s ease, transform .45s ease';observer.observe(card);}})).observe(grid,{childList:true});
